@@ -1,27 +1,9 @@
 import * as grpc from '@grpc/grpc-js';
-import * as protoLoader from '@grpc/proto-loader';
-import { ClientRequest } from './proto/generated/clientService/ClientRequest';
-import { ProtoGrpcType } from './proto/generated/clientService';
-import { ClientResponse } from './proto/generated/clientService/ClientResponse';
-
-const PROTO_PATH = './dist/proto/clientService.proto';
-
-/**
- * Suggested options for similarity to loading grpc.load behavior.
- */
-const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
-  keepCase: true,
-  defaults: true,
-  oneofs: true,
-});
-const protoDescriptor = grpc.loadPackageDefinition(
-  packageDefinition
-) as unknown as ProtoGrpcType;
-
-/**
- * Grab the clientService package from the protobuf file.
- */
-const clientService = protoDescriptor.clientService;
+import {
+  ClientRequest,
+  ClientResponse,
+  ClientServiceRoutesService,
+} from './proto/clientService';
 
 const clients = [
   {
@@ -45,7 +27,7 @@ const clients = [
 class gRPC extends grpc.Server {
   constructor() {
     super();
-    this.addService(clientService.ClientServiceRoutes.service, {
+    this.addService(ClientServiceRoutesService, {
       client: this.getClient,
     });
   }

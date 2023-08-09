@@ -1,15 +1,9 @@
 import type { GetServerSideProps } from 'next';
-import { ClientService } from '../core/grpc-service';
+import { ClientResponse } from 'core/clientService';
+import { ClientService } from 'core/grpc-service';
 
 interface Props {
-  client: {
-    id: number;
-    firstName: string;
-    lastName: string;
-    age: number;
-    email: string;
-    active: boolean;
-  };
+  client: ClientResponse;
 }
 
 export default function Home({ client }: Props) {
@@ -26,10 +20,15 @@ export default function Home({ client }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const authService = new ClientService();
-    const { client, error } = await authService.getClient(1);
+    const clientService = new ClientService();
+
+    const { client, error } = await clientService.getClient(1);
+
+    console.log(client);
+    console.log(error);
+
     return {
-      props: { client, error },
+      props: { client },
     };
   } catch (error) {
     return {
